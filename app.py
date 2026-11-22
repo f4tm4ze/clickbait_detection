@@ -375,16 +375,9 @@ def render_result(res: dict, threshold: float) -> None:
     if not prop:
         md('<div class="notice warn">The proposed model is unavailable; this result comes from the baseline model.</div>')
 
-    # ---- Plain-language reasons -------------------------------------------
     agree_flag = None
     if base and prop:
         agree_flag = label_of(base.prob, threshold) == label_of(prop.prob, threshold)
-    summary, bullets = explain(style_cues(res["raw"]), lab, conf, agree_flag)
-    card("Why this result?",
-         f'<p style="margin:0 0 .6rem">{esc(summary)}</p>',
-         '<ul style="margin:0 0 .7rem">' + "".join(f"<li>{esc(b)}</li>" for b in bullets) + "</ul>",
-         '<div class="muted">These reasons come from simple wording checks. '
-         'The AI model itself decides from patterns it learned during training.</div>')
 
     # ---- Prediction details ------------------------------------------------
     rows = ""
@@ -403,6 +396,14 @@ def render_result(res: dict, threshold: float) -> None:
          f'<p style="margin:0 0 .8rem">{esc(interpretation(conf, lab))}</p>',
          '<table class="tbl"><tr><th>Model</th><th>Classification</th><th>Clickbait probability</th><th>Time</th></tr>',
          rows, '</table>', agree)
+
+    # ---- Plain-language reasons -------------------------------------------
+    summary, bullets = explain(style_cues(res["raw"]), lab, conf, agree_flag)
+    card("Why this result?",
+         f'<p style="margin:0 0 .6rem">{esc(summary)}</p>',
+         '<ul style="margin:0 0 .7rem">' + "".join(f"<li>{esc(b)}</li>" for b in bullets) + "</ul>",
+         '<div class="muted">These reasons come from simple wording checks. '
+         'The AI model itself decides from patterns it learned during training.</div>')
 
     with st.expander("Technical details"):
         st.markdown("**Preprocessed input**")
@@ -782,7 +783,7 @@ def main() -> None:
     with t3:
         tab_about(system)
 
-    md('<div class="footer">© 2026 All rights reserved.</div>')
+    md('<div class="footer">Research prototype. Predictions may be wrong.</div>')
 
 
 main()
