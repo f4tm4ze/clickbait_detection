@@ -1,0 +1,11 @@
+﻿__pycache__/
+*.pyc
+.env
+*.keras
+*.h5
+.venv/
+venv/
+.DS_Store
+*.log
+deployment_baseline/
+deployment_proposed/
