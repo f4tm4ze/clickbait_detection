@@ -523,9 +523,9 @@ def tab_check(system: dict, threshold: float) -> None:
         st.text_area("Enter News Headline", key="headline_input", height=120, max_chars=MAX_CHARS,
                      placeholder="Paste or type a news headline here...", label_visibility="collapsed", disabled=busy)
         c1, c2 = st.columns([3, 1])
-        c1.button("Analyzing…" if busy else "Analyze Headline", type="primary", use_container_width=True,
-                  disabled=busy, on_click=start_analysis)
-        c2.button("Clear", use_container_width=True, disabled=busy, on_click=clear_input)
+        c1.button("Analyzing…" if busy else "Analyze Headline", key="analyze_btn", type="primary",
+                  use_container_width=True, disabled=busy, on_click=start_analysis)
+        c2.button("Clear", key="clear_btn", use_container_width=True, disabled=busy, on_click=clear_input)
 
     if busy:
         with st.spinner("Analyzing headline…"):
