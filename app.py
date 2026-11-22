@@ -783,7 +783,7 @@ def main() -> None:
     with t3:
         tab_about(system)
 
-    md('<div class="footer">Research prototype. Predictions may be wrong.</div>')
+    md('<div class="footer">© 2026 All rights reserved.</div>')
 
 
 main()
