@@ -72,9 +72,8 @@ HISTORY_LIMIT = 50
 
 BENCHMARKS = [
     # name, accuracy, precision, recall, f1
-    ("Baseline BiLSTM", 0.7461, 0.7030, 0.6830, 0.6929),
-    ("BiLSTM + XLM-R", 0.7651, 0.7183, 0.7235, 0.7209),
-    ("BiLSTM + XLM-R + Attention (proposed)", 0.7855, 0.7705, 0.6956, 0.7311),
+    ("Baseline: BiLSTM + Word2Vec (67/33 split)", 0.7709, 0.7726, 0.6431, 0.7019),
+    ("Proposed: BiLSTM + XLM-R + Attention", 0.7855, 0.7705, 0.6956, 0.7311),
 ]
 
 
@@ -414,6 +413,17 @@ def render_result(res: dict, threshold: float) -> None:
             st.caption(f"Baseline vocabulary coverage: {base.coverage * 100:.0f}% of words found in the training vocabulary.")
 
 
+def render_benchmarks() -> str:
+    best = max(r[4] for r in BENCHMARKS)
+    rows = "".join(
+        f'<tr class="{"best" if r[4] == best else ""}"><td>{esc(r[0])}</td>'
+        f'<td>{r[1]:.4f}</td><td>{r[2]:.4f}</td><td>{r[3]:.4f}</td><td>{r[4]:.4f}</td></tr>'
+        for r in BENCHMARKS
+    )
+    return ('<table class="tbl"><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr>'
+            f'{rows}</table>')
+
+
 def render_sidebar(system: dict) -> float:
     with st.sidebar:
         st.markdown("### Inference Parameter")
@@ -703,6 +713,10 @@ def tab_about(system: dict) -> None:
          '<p class="muted" style="margin:0">Preprocessing: lowercase, “!” → “tanda seru”, “?” → “tanda tanya”, punctuation removal, whitespace normalisation (same as training).</p>')
 
     card("Model architectures", '<b>Baseline</b>', BASELINE_FLOW, '<b>Proposed</b>', PROPOSED_FLOW)
+
+    card("Experimental results (test set)", render_benchmarks(),
+         '<p class="muted" style="margin:.7rem 0 0">The proposed model has the best accuracy, recall and F1. '
+         'The baseline has slightly higher precision.</p>')
 
     px, bl = system.get("proposed"), system.get("baseline")
     pcfg = (px or {}).get("config", {})
